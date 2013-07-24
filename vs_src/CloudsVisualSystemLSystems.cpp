@@ -9,7 +9,7 @@
 #include "CloudsVisualSystemLSystems.h"
 
 string CloudsVisualSystemLSystems::getSystemName(){
-	return "LSystems";
+	return "LSystem";
 }
 
 void CloudsVisualSystemLSystems::selfSetup(){
