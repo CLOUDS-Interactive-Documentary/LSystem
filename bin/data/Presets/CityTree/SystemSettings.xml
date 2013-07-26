@@ -8,7 +8,7 @@
 <Widget>
     <Kind>2</Kind>
     <Name>DEBUG</Name>
-    <Value>1</Value>
+    <Value>0</Value>
 </Widget>
 <Widget>
     <Kind>12</Kind>
@@ -53,7 +53,7 @@
 <Widget>
     <Kind>4</Kind>
     <Name>Speed</Name>
-    <Value>0.837438405</Value>
+    <Value>0.886699498</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
@@ -62,6 +62,16 @@
 </Widget>
 <Widget>
     <Kind>4</Kind>
-    <Name>dotSize</Name>
-    <Value>0.985221684</Value>
+    <Name>breakness</Name>
+    <Value>0.000000000</Value>
+</Widget>
+<Widget>
+    <Kind>2</Kind>
+    <Name>Grow</Name>
+    <Value>1</Value>
+</Widget>
+<Widget>
+    <Kind>2</Kind>
+    <Name>Flow</Name>
+    <Value>0</Value>
 </Widget>

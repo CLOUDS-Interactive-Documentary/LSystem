@@ -53,6 +53,7 @@ void CloudsVisualSystemLSystems::reBuildLSys(){
 }
 
 void CloudsVisualSystemLSystems::selfUpdate(){
+    lsysr.time = timeline->getCurrentTime() * lsysr.speed;
     lsysr.update();
 }
 

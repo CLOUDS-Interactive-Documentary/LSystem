@@ -109,22 +109,22 @@ ofRectangle LSystemReconstructor::getActiveNodesAre(){
 }
 
 void LSystemReconstructor::init(){
-    timeLast = ofGetElapsedTimef();
-    time = 0.0;
+//    timeLast = time;//ofGetElapsedTimef();
+//    time = 0.0;
 }
 
 void LSystemReconstructor::update(){
     
     //  Update Time
     //
-    float timeNow = ofGetElapsedTimef();
-    float timeDiff = timeNow - timeLast;
+//    float timeNow = ofGetElapsedTimef();
+//    float timeDiff = timeNow - timeLast;
     activeNodes.clear();
     
     if (bGrow){
         //  Go foward on time
         //
-        time += timeDiff*speed;
+//        time += timeDiff*speed;
         
         //  Render
         //
@@ -133,7 +133,7 @@ void LSystemReconstructor::update(){
             if (nodes[i].startTime >= 0.0){
                 float relativeTime = time - nodes[i].startTime;
                 for (int j = 0; j < nodes[i].branchesIndex.size(); j++){
-                    renderBranch( growMesh, nodes[i].branchesIndex[j], relativeTime, ofNoise(nodes[i].x+ofGetElapsedTimef()*0.01,nodes[i].y));
+                    renderBranch( growMesh, nodes[i].branchesIndex[j], relativeTime, ofNoise(nodes[i].x+time*0.01,nodes[i].y));// ofGetElapsedTimef()*0.01,nodes[i].y));
                 }
             }
         }
@@ -177,7 +177,7 @@ void LSystemReconstructor::update(){
         }
     }
     
-    timeLast = timeNow;
+//    timeLast = timeNow;
 }
 
 void LSystemReconstructor::renderBranch(ofMesh &_mesh, int _index, float _relativeTime, float _speed){

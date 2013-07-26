@@ -38,6 +38,8 @@ public:
     bool    bGrow;
     bool    bFlow;
     
+    float   time;
+    
 private:
     vector<ofPolyline>  lines;
     vector<LNode>       nodes;
@@ -48,7 +50,7 @@ private:
     
     void    renderBranch(ofMesh &_mesh, int _index, float _relativeTime, float _speed);
     
-    float   time, timeLast;
+//    float   timeLast;
 };
 
 #endif
