@@ -35,10 +35,6 @@ void CloudsVisualSystemLSystems::selfEnd(){
     
 }
 
-void CloudsVisualSystemLSystems::selfUpdate(){
-    lsysr.update();
-}
-
 void CloudsVisualSystemLSystems::reBuildLSys(){
     LSystem sys;
     sys.initialPos.set(0,0);
@@ -56,15 +52,50 @@ void CloudsVisualSystemLSystems::reBuildLSys(){
     lsysr.init();
 }
 
+void CloudsVisualSystemLSystems::selfUpdate(){
+    lsysr.update();
+}
+
 void CloudsVisualSystemLSystems::selfDrawBackground()
 {
+//    ofPushMatrix();
+//    ofPushStyle();
+//    
+//    ofTranslate(ofGetWidth()*0.5, ofGetHeight()*0.5);
+//    ofTranslate((180.0-xRot->getPos())*10.0, (180.0-yRot->getPos())*10.0);
+//    ofScale(camDistance*0.1,camDistance*0.1);
+//    
+//    ofSetColor(255, originalAlpha*255);
+//    lsysr.originalMesh.draw();
+//    
+//    ofEnableBlendMode(OF_BLENDMODE_ADD);
+//    ofSetColor(255, particlesAlpha*255);
+//    for(int i = 0; i < lsysr.activeNodes.size(); i++){
+//        ofPoint pos = lsysr.activeNodes[i];
+//        
+//        glPointSize(dotSize);
+//        glBegin(GL_POINTS);
+//        glVertex3f(pos.x,pos.y,pos.z);
+//        glEnd();
+//    }
+//    
+//    ofSetColor(255, traceAlpha*255);
+//    lsysr.growMesh.draw();
+//    
+//    ofEnableAlphaBlending();
+//    
+//    ofPopStyle();
+//    ofPopMatrix();
+}
+
+void CloudsVisualSystemLSystems::selfDraw(){
+    mat->begin();
+//    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_DEPTH_TEST);
     ofPushMatrix();
     ofPushStyle();
     
-    ofTranslate(ofGetWidth()*0.5, ofGetHeight()*0.5);
-    ofTranslate((180.0-xRot->getPos())*10.0, (180.0-yRot->getPos())*10.0);
-    ofScale(camDistance*0.1,camDistance*0.1);
-    
+    ofEnableAlphaBlending();
     ofSetColor(255, originalAlpha*255);
     lsysr.originalMesh.draw();
     
@@ -79,17 +110,18 @@ void CloudsVisualSystemLSystems::selfDrawBackground()
         glEnd();
     }
     
-    ofSetColor(255, traceAlpha*255);
-    lsysr.growMesh.draw();
-    
     ofEnableAlphaBlending();
+    
+    ofSetColor(255,traceAlpha*255);
+    lsysr.growMesh.draw();
+
+   
     
     ofPopStyle();
     ofPopMatrix();
-}
-
-void CloudsVisualSystemLSystems::selfDraw(){
-
+    
+//    glDisable(GL_DEPTH_TEST);
+    mat->end();
 }
 
 void CloudsVisualSystemLSystems::selfSetupSystemGui(){
