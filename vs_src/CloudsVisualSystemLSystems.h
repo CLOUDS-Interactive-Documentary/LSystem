@@ -9,7 +9,9 @@
 #pragma once
 
 #include "CloudsVisualSystem.h"
-#include "LSystemReconstructor.h"
+
+#include "LSystem.h"
+#include "LNode.h"
 
 class CloudsVisualSystemLSystems : public CloudsVisualSystem {
 public:
@@ -46,16 +48,46 @@ public:
     void selfSetupRenderGui();
     void guiRenderEvent(ofxUIEventArgs &e);
     
-    void billBoard(); 
-    
 protected:
-    void    reBuildLSys();
     
-    LSystemReconstructor    lsysr;
+    //  Grid
+    //
+    void        buildGrid();
+    ofVboMesh   grid;
+    float       gridSize;
+    float       gridResolution;
+    float       gridCrossSize;
+    float       gridCrossWidth;
+    float       gridCrossAlpha;
     
-    string  axiom,rule1,rule2;
-    float   angle,lsysScale,lsysDepth;
+    //  LSystem
+    //
+    void    buildLSystem();
+    void    lineTo(ofPoint &_pnt);
+    void    addNode(ofPoint &_pnt);
+    int     isNode(ofPoint &_pnt);
+    void    addBranch(ofMesh &_mesh, int _index, float _relativeTime, float _speed);
     
-    float   originalAlpha,traceAlpha;
-    float   dotSize,particlesAlpha;
+    vector<ofPolyline>  lsysLines;
+    vector<LNode>       lsysNodes;
+    
+    ofMesh  lsysOriginal;
+    string  lsysAxiom, lsysRule1, lsysRule2;
+    float   lsysAngle, lsysScale, lsysDepth;
+    float   lsysOriginalAlpha;
+    
+    //  Growing
+    ofMesh  lsysGrowing;
+    float   lsysGrowingBorn, lsysGrowingSpeed;
+    float   lsysGrowingAlpha;
+    vector<ofPoint>  dots;
+    float   dotSize, dotAlpha;
+    
+    //  Flow
+    float   lsysFlowSpeed;
+    float   lsysFlowLenght;
+    float   lsysFlowAlpha;
+    
+    
+    float   time;
 };

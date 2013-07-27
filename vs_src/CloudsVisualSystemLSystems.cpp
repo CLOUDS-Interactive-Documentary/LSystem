@@ -13,10 +13,16 @@ string CloudsVisualSystemLSystems::getSystemName(){
 }
 
 void CloudsVisualSystemLSystems::selfSetup(){
-    angle = 5;
-    axiom = "B";
-    rule1 = "B=F[5+B][7-B]-F[4+B][6-B]-[3+B][5+B]-FB";
-    rule2 = "F=FF";
+    lsysAngle = 5;
+    lsysAxiom = "B";
+    lsysRule1 = "B=F[5+B][7-B]-F[4+B][6-B]-[3+B][5+B]-FB";
+    lsysRule2 = "F=FF";
+    
+    lsysGrowingSpeed = 1.0;
+    lsysGrowingBorn = 2.0;
+    
+    lsysOriginal.setMode(OF_PRIMITIVE_LINES);
+    lsysGrowing.setMode(OF_PRIMITIVE_LINES);
 }
 
 void CloudsVisualSystemLSystems::selfSetupGuis(){
@@ -28,136 +34,352 @@ void CloudsVisualSystemLSystems::selfAutoMode(){
 }
 
 void CloudsVisualSystemLSystems::selfBegin(){
-    reBuildLSys();
+    buildLSystem();
+    buildGrid();
 }
 
 void CloudsVisualSystemLSystems::selfEnd(){
     
 }
 
-void CloudsVisualSystemLSystems::reBuildLSys(){
-    LSystem sys;
-    sys.initialPos.set(0,0);
-    
-    sys.ds = lsysScale;
-    
-    sys.setAngle(angle);
-    sys.addAxion(axiom);
-    sys.addRule(rule1);
-    if (rule2.size() > 0){
-        sys.addRule(rule2);
-    }
-    
-    lsysr.setup(sys, lsysDepth);
-    lsysr.init();
-}
-
-void CloudsVisualSystemLSystems::selfUpdate(){
-    lsysr.time = timeline->getCurrentTime() * lsysr.speed;
-    lsysr.update();
-}
-
-void CloudsVisualSystemLSystems::selfDrawBackground()
-{
-//    ofPushMatrix();
-//    ofPushStyle();
-//    
-//    ofTranslate(ofGetWidth()*0.5, ofGetHeight()*0.5);
-//    ofTranslate((180.0-xRot->getPos())*10.0, (180.0-yRot->getPos())*10.0);
-//    ofScale(camDistance*0.1,camDistance*0.1);
-//    
-//    ofSetColor(255, originalAlpha*255);
-//    lsysr.originalMesh.draw();
-//    
-//    ofEnableBlendMode(OF_BLENDMODE_ADD);
-//    ofSetColor(255, particlesAlpha*255);
-//    for(int i = 0; i < lsysr.activeNodes.size(); i++){
-//        ofPoint pos = lsysr.activeNodes[i];
-//        
-//        glPointSize(dotSize);
-//        glBegin(GL_POINTS);
-//        glVertex3f(pos.x,pos.y,pos.z);
-//        glEnd();
-//    }
-//    
-//    ofSetColor(255, traceAlpha*255);
-//    lsysr.growMesh.draw();
-//    
-//    ofEnableAlphaBlending();
-//    
-//    ofPopStyle();
-//    ofPopMatrix();
-}
-
-void CloudsVisualSystemLSystems::selfDraw(){
-    mat->begin();
-//    glEnable(GL_DEPTH_TEST);
-    glDisable(GL_DEPTH_TEST);
-    ofPushMatrix();
-    ofPushStyle();
-    
-    ofEnableAlphaBlending();
-    ofSetColor(255, originalAlpha*255);
-    lsysr.originalMesh.draw();
-    
-    ofEnableBlendMode(OF_BLENDMODE_ADD);
-    ofSetColor(255, particlesAlpha*255);
-    for(int i = 0; i < lsysr.activeNodes.size(); i++){
-        ofPoint pos = lsysr.activeNodes[i];
-        
-        glPointSize(dotSize);
-        glBegin(GL_POINTS);
-        glVertex3f(pos.x,pos.y,pos.z);
-        glEnd();
-    }
-    
-    ofEnableAlphaBlending();
-    
-    ofSetColor(255,traceAlpha*255);
-    lsysr.growMesh.draw();
-
-   
-    
-    ofPopStyle();
-    ofPopMatrix();
-    
-//    glDisable(GL_DEPTH_TEST);
-    mat->end();
-}
-
 void CloudsVisualSystemLSystems::selfSetupSystemGui(){
+    sysGui->addLabel("Structure");
     ofxUITextInput *uiAxiom = sysGui->addTextInput("Axiom", "B", OFX_UI_FONT_SMALL);
     uiAxiom->setAutoClear(false);
     ofxUITextInput *uiRule1 = sysGui->addTextInput("Rule1", "B=F[5+B][7-B]-F[4+B][6-B]-[3+B][5+B]-FB", OFX_UI_FONT_SMALL);
     uiRule1->setAutoClear(false);
     ofxUITextInput *uiRule2 = sysGui->addTextInput("Rule2", "F=FF", OFX_UI_FONT_SMALL);
     uiRule2->setAutoClear(false);
-    sysGui->addSlider("Angle", 0, 90, &angle);
+    sysGui->addSlider("Angle", 0, 90, &lsysAngle);
     sysGui->addSlider("Scale", 0.5, 2, &lsysScale);
     sysGui->addSlider("Depth", 1, 10, &lsysDepth);
-    sysGui->addSlider("aNoise", 0.0, 2.0, &lsysr.aNoise);
-    sysGui->addSlider("tNoise", 0.0, 1.0, &lsysr.tNoise);
-    sysGui->addSlider("Speed", 0.0, 10, &lsysr.speed);
-    sysGui->addSlider("bornTime", 0.0, 10.0, &lsysr.bornRandom);
-    sysGui->addSlider("breakness", 0.0, 1.0, &lsysr.breakness);
     
-    sysGui->addToggle("Grow", &lsysr.bGrow);
-    sysGui->addToggle("Flow", &lsysr.bFlow);
+    sysGui->addLabel("Growing");
+    sysGui->addSlider("Growing_speed", 0.0, 10, &lsysGrowingSpeed);
+    sysGui->addSlider("Growing_Born", 0.0, 10.0, &lsysGrowingBorn);
+    
+    sysGui->addLabel("Flow");
+    sysGui->addSlider("Flow_speed", 0.0, 10, &lsysFlowSpeed);
     
     
-    axiom = uiAxiom->getTextString();
-    rule1 = uiRule1->getTextString();
-    rule2 = uiRule2->getTextString();
+    lsysAxiom = uiAxiom->getTextString();
+    lsysRule1 = uiRule1->getTextString();
+    lsysRule2 = uiRule2->getTextString();
     
-    reBuildLSys();
+    buildLSystem();
 }
 
 void CloudsVisualSystemLSystems::selfSetupRenderGui(){
-    rdrGui->addLabel("Show");
-    rdrGui->addSlider("Oringinal_alpha", 0.0, 1.0, &originalAlpha);
-    rdrGui->addSlider("Particles_alpha", 0.0, 1.0, &particlesAlpha);
-    rdrGui->addSlider("Particles_size", 0.0, 10.0, &dotSize);
-    rdrGui->addSlider("Trace", 0.0, 1.0, &traceAlpha);
+    rdrGui->addLabel("Grid");
+    rdrGui->addSlider("Grid_Size", 0, 100, &gridSize);
+    rdrGui->addSlider("Grid_Resolution", 0, 5, &gridResolution);
+    rdrGui->addSlider("Grid_Cross_Size", 0.01, 0.1, &gridCrossSize);
+    rdrGui->addSlider("Grid_Cross_Width", 0.0, 5.0, &gridCrossWidth);
+    rdrGui->addSlider("Grid_Cross_Alpha", 0.0, 1.0, &gridCrossAlpha);
+    
+    rdrGui->addLabel("LSystem");
+    rdrGui->addSlider("Oringinal_alpha", 0.0, 1.0, &lsysOriginalAlpha );
+    rdrGui->addSlider("Growing_alpha", 0.0, 1.0, &lsysGrowingAlpha );
+    rdrGui->addSlider("Dots_alpha", 0.0, 1.0, &dotAlpha);
+    rdrGui->addSlider("Dots_size", 0.0, 10.0, &dotSize);
+    rdrGui->addSlider("Flow_lenght", 0.0, 30.0, &lsysFlowLenght);
+    rdrGui->addSlider("Flow_alpha", 0.0, 1.0, &lsysFlowAlpha);
+    
+    buildGrid();
+}
+
+void CloudsVisualSystemLSystems::buildGrid(){
+    
+    ofFloatColor crossColor = ofFloatColor(gridCrossAlpha);
+    ofPoint normal = ofPoint(0,0.0,1.0);
+    
+    grid.clear();
+    grid.setMode(OF_PRIMITIVE_LINES);
+    for(int y = -gridSize; y < gridSize; y++){
+        for(int x = -gridSize; x < gridSize; x++){
+            grid.addColor(crossColor);
+            grid.addNormal(normal);
+            grid.addVertex(ofPoint(x*gridResolution-gridCrossSize,y*gridResolution));
+            
+            grid.addColor(crossColor);
+            grid.addNormal(normal);
+            grid.addVertex(ofPoint(x*gridResolution+gridCrossSize,y*gridResolution));
+            
+            grid.addColor(crossColor);
+            grid.addNormal(normal);
+            grid.addVertex(ofPoint(x*gridResolution,y*gridResolution-gridCrossSize));
+            
+            grid.addColor(crossColor);
+            grid.addNormal(normal);
+            grid.addVertex(ofPoint(x*gridResolution,y*gridResolution+gridCrossSize));
+        }
+    }
+}
+
+void CloudsVisualSystemLSystems::buildLSystem(){
+    //  Clear
+    //
+    lsysLines.clear();
+    lsysLines.push_back(ofPolyline());
+    lsysNodes.clear();
+    lsysOriginal.clear();
+    
+    LSystem sys;
+    sys.initialPos.set(0,0);
+    sys.unoise = 0.0;
+    sys.utime = 0.0;
+    
+    sys.ds = lsysScale;
+    sys.setAngle( lsysAngle );
+    sys.addAxion( lsysAxiom );
+    sys.addRule( lsysRule1 );
+    if (lsysRule2.size() > 0){
+        sys.addRule( lsysRule2);
+    }
+
+    sys.make( lsysDepth );
+    
+    lsysOriginal = sys.mesh;
+    
+    if ( lsysOriginal.getVertices().size() > 2){
+        lineTo( lsysOriginal.getVertices()[0] );
+        addNode( lsysOriginal.getVertices()[0] );
+        
+        for (int i = 1; i < lsysOriginal.getVertices().size();i++){
+            if ( i%2 == 1){
+                lineTo( lsysOriginal.getVertices()[i]);
+            } else {
+                if ( lsysOriginal.getVertices()[i] != lsysOriginal.getVertices()[i-1]){
+                    lsysLines.push_back(ofPolyline());
+                    lineTo( lsysOriginal.getVertices()[i] );
+                    addNode( lsysOriginal.getVertices()[i] );
+                }
+            }
+        }
+    }
+    
+    if ( lsysNodes.size() > 0){
+        lsysNodes[0].startTime = 0;
+    }
+}
+
+
+void CloudsVisualSystemLSystems::lineTo(ofPoint &_pnt){
+    lsysLines[ lsysLines.size()-1 ].addVertex(_pnt);
+}
+
+void CloudsVisualSystemLSystems::addNode(ofPoint &_pnt){
+    
+    vector<ofPoint> blank;
+    
+    for (int i = lsysNodes.size()-1; i >=0; i--) {
+        if ( lsysNodes[i] == _pnt ){
+            lsysNodes[i].branchesIndex.push_back( lsysLines.size()-1 );
+            lsysNodes[i].trails.push_back( blank );
+            return;
+        }
+    }
+    
+    LNode node;
+    node.set(_pnt);
+    node.startTime = -1.0;
+    node.pct = -1.0;
+    node.branchesIndex.push_back( lsysLines.size()-1 );
+    node.trails.push_back( blank );
+    
+    lsysNodes.push_back( node );
+}
+
+void CloudsVisualSystemLSystems::addBranch(ofMesh &_mesh, int _index, float _relativeTime, float _speed){
+    
+    int totalPoints = lsysLines[_index].size();
+    int drawPoints = 0;
+    
+    for (int k = 0 ; k < totalPoints-1; k++){
+        float thisTime = _speed*(float)k;
+        float nextTime = _speed*((float)k+1.0f);
+        
+        if ( k == totalPoints-1){
+            nextTime = thisTime;
+        }
+        
+        if (_relativeTime > thisTime && _relativeTime < nextTime ){
+            float part = _relativeTime - thisTime;
+            float whole = nextTime - thisTime;
+            float pct = part / whole;
+            
+            ofPoint A = lsysLines[ _index ][k];
+            ofPoint B = lsysLines[ _index ][k+1];
+            
+            // figure out where we are between a and b
+            //
+            ofPoint pos = (1.0-pct)*A + (pct)*B;
+            
+            dots.push_back(pos);
+            
+            _mesh.addVertex(lsysLines[ _index ][k]);
+            _mesh.addVertex(pos);
+            
+        } else if ( _relativeTime > thisTime ){
+            ofPoint pos = lsysLines[ _index ][k];
+            
+            _mesh.addVertex(pos);
+            _mesh.addVertex(lsysLines[_index][k+1]);
+            
+            //  check if pass over a node
+            //
+            int index = isNode(pos);
+            if (index != -1){
+                if ( lsysNodes[index].startTime == -1.0 ){
+                    lsysNodes[index].startTime = time +lsysGrowingBorn*_speed;
+                }
+            }
+            
+        } else {
+            break;
+        }
+    }
+}
+
+int CloudsVisualSystemLSystems::isNode(ofPoint &_pnt){
+    for (int i = lsysNodes.size()-1; i >= 0; i--) {
+        if ( lsysNodes[i] == _pnt ){
+            return i;
+        }
+    }
+    
+    return -1;
+}
+
+void CloudsVisualSystemLSystems::selfUpdate(){
+
+    time = timeline->getCurrentTime()*lsysGrowingSpeed;
+    
+    dots.clear();
+    
+    lsysGrowing.clear();
+    for(int i = 0; i < lsysNodes.size(); i++){
+                
+        if (lsysNodes[i].startTime >= 0.0){
+            float relativeTime = time - lsysNodes[i].startTime;
+            
+            for (int j = 0; j < lsysNodes[i].branchesIndex.size(); j++){
+                addBranch( lsysGrowing, lsysNodes[i].branchesIndex[j], relativeTime, ofNoise(lsysNodes[i].x+time*0.01,lsysNodes[i].y));
+            }
+        }
+    }
+    
+    if ( lsysFlowSpeed > 0.0 ){
+        for(int i = 0; i < lsysNodes.size(); i++){
+            
+            if (lsysNodes[i].pct >= 0.0){
+                
+                if (lsysNodes[i].startTime < 0.0){
+                    break;
+                }
+                
+                for (int j = 0; j < lsysNodes[i].branchesIndex.size(); j++){
+                    
+                    int index = lsysNodes[i].branchesIndex[j];
+                    int totalPoints = lsysLines[ index ].size();
+                    
+                    float line = (totalPoints-1)*lsysNodes[i].pct;
+                    int k = line;
+                    
+                    float pct = line-(int)(line);
+                    
+                    ofPoint A = lsysLines[ index ][k];
+                    ofPoint B = lsysLines[ index ][k+1];
+                    ofPoint pos = (1.0-pct)*A + (pct)*B;
+                    
+                    lsysNodes[i].trails[j].push_back(pos);
+                    while (lsysNodes[i].trails[j].size() > lsysFlowLenght) {
+                        lsysNodes[i].trails[j].erase(lsysNodes[i].trails[j].begin());
+                    }
+                }
+                
+                lsysNodes[i].pct += lsysFlowSpeed*ofNoise(ofGetElapsedTimef()*0.01)*0.01;
+                
+                if(lsysNodes[i].pct > 1.0){
+                    lsysNodes[i].pct = -1.0;
+                    for (int j = 0; j < lsysNodes[i].trails.size(); j++){
+                        lsysNodes[i].trails[j].clear();
+                    }
+                }
+            } else {
+                for (int j = 0; j < lsysNodes[i].trails.size(); j++){
+                    lsysNodes[i].trails[j].clear();
+                }
+                lsysNodes[i].pct = ofRandom(-10.0,0.1);
+            }
+        }
+    }
+}
+
+void CloudsVisualSystemLSystems::selfDrawBackground()
+{
+}
+
+void CloudsVisualSystemLSystems::selfDraw(){
+    mat->begin();
+    glDisable(GL_DEPTH_TEST);
+    
+    ofPushMatrix();
+    ofPushStyle();
+    
+    //  Grid
+    //
+    ofPushStyle();
+//    ofEnableBlendMode(OF_BLENDMODE_ADD);
+    glLineWidth(gridCrossWidth);
+    grid.draw();
+    ofPopStyle();
+    
+    //  Original L-System
+    //
+    ofEnableAlphaBlending();
+    ofSetColor(255, lsysOriginalAlpha*255);
+    lsysOriginal.draw();
+    
+    //  Dots
+    //
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
+    ofSetColor(255, dotAlpha*255);
+    for(int i = 0; i < dots.size(); i++){
+        glPointSize(dotSize);
+        glBegin(GL_POINTS);
+        glVertex3f(dots[i].x,dots[i].y,dots[i].z);
+        glEnd();
+    }
+    
+    ofDisableBlendMode();
+    ofEnableAlphaBlending();
+    for (int i = 0; i < lsysNodes.size(); i++) {
+        if ( lsysNodes[i].pct > 0.1 && lsysNodes[i].pct < 0.9){
+            for(int j = 0; j < lsysNodes[i].trails.size(); j++){
+                ofMesh mesh;
+                mesh.setMode(OF_PRIMITIVE_LINE_STRIP);
+                for(int k = 0; k < lsysNodes[i].trails[j].size(); k++){
+                    float alpha = ofMap(k, 0,lsysNodes[i].trails[j].size(), 0.0, lsysFlowAlpha);
+                    mesh.addColor( ofFloatColor( 1.0, alpha) );
+                    mesh.addVertex(lsysNodes[i].trails[j][k]);
+                }
+                ofFill();
+                ofSetColor( 255 );
+                mesh.draw();
+            }
+        }
+    }
+    
+    //  Growing Trace
+    //
+    ofSetColor(255, lsysGrowingAlpha*255);
+    lsysGrowing.draw();
+
+    ofPopStyle();
+    ofPopMatrix();
+    
+    mat->end();
 }
 
 void CloudsVisualSystemLSystems::guiSystemEvent(ofxUIEventArgs &e){
@@ -166,21 +388,28 @@ void CloudsVisualSystemLSystems::guiSystemEvent(ofxUIEventArgs &e){
     
     if ( name == "Axiom"){
         ofxUITextInput *uiAxiom = (ofxUITextInput *) e.widget;
-        axiom = uiAxiom->getTextString();
-        reBuildLSys();
+        lsysAxiom = uiAxiom->getTextString();
+        buildLSystem();
     } else if ( name == "Rule1"){
         ofxUITextInput *uiRule1 = (ofxUITextInput *) e.widget;
-        rule1 = uiRule1->getTextString();
-        reBuildLSys();
+        lsysRule1 = uiRule1->getTextString();
+        buildLSystem();
     } else if ( name == "Rule2"){
         ofxUITextInput *uiRule2 = (ofxUITextInput *) e.widget;
-        rule2 = uiRule2->getTextString();
-        reBuildLSys();
-    } else if ( name == "Angle" || name == "Depth" || name == "Scale" || name == "Grow" || name == "breakness"){
-        reBuildLSys();
+        lsysRule2 = uiRule2->getTextString();
+        buildLSystem();
+    } else if ( name == "Angle" || name == "Depth" || name == "Scale" ){
+        buildLSystem();
     } 
+}
+
+void CloudsVisualSystemLSystems::guiRenderEvent(ofxUIEventArgs &e){
+    string name = e.widget->getName();
     
-    
+    if ( name.find("Grid") == 0){
+        buildGrid();
+    }
+
 }
 
 void CloudsVisualSystemLSystems::selfExit()
@@ -234,11 +463,6 @@ void CloudsVisualSystemLSystems::selfDrawDebug()
 }
 
 void CloudsVisualSystemLSystems::selfSceneTransformation()
-{
-    
-}
-
-void CloudsVisualSystemLSystems::guiRenderEvent(ofxUIEventArgs &e)
 {
     
 }

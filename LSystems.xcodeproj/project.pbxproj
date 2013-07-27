@@ -59,10 +59,7 @@
 		3DA460C8179ED608002EC0AC /* CloudsVisualSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA460C2179ED608002EC0AC /* CloudsVisualSystem.cpp */; };
 		3DA46134179F2E39002EC0AC /* CloudsVisualSystemLSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA46128179F2E39002EC0AC /* CloudsVisualSystemLSystems.cpp */; };
 		3DA46135179F2E39002EC0AC /* LNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA4612A179F2E39002EC0AC /* LNode.cpp */; };
-		3DA46136179F2E39002EC0AC /* LParticle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA4612C179F2E39002EC0AC /* LParticle.cpp */; };
 		3DA46137179F2E39002EC0AC /* LSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA4612E179F2E39002EC0AC /* LSystem.cpp */; };
-		3DA46138179F2E39002EC0AC /* LSystemReconstructor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA46130179F2E39002EC0AC /* LSystemReconstructor.cpp */; };
-		3DA46139179F2E39002EC0AC /* LVectorField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA46132179F2E39002EC0AC /* LVectorField.cpp */; };
 		3DB1BC8917A31E920051CC6B /* CloudsRGBDCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DB1BC8517A31E920051CC6B /* CloudsRGBDCamera.cpp */; };
 		3DB1BC8A17A31E920051CC6B /* CloudsRGBDVideoPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DB1BC8717A31E920051CC6B /* CloudsRGBDVideoPlayer.cpp */; };
 		3DEFE117176E7D8000139095 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DEFE110176E7D8000139095 /* tinyxml.cpp */; };
@@ -268,14 +265,8 @@
 		3DA46129179F2E39002EC0AC /* CloudsVisualSystemLSystems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudsVisualSystemLSystems.h; sourceTree = "<group>"; };
 		3DA4612A179F2E39002EC0AC /* LNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LNode.cpp; sourceTree = "<group>"; };
 		3DA4612B179F2E39002EC0AC /* LNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNode.h; sourceTree = "<group>"; };
-		3DA4612C179F2E39002EC0AC /* LParticle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LParticle.cpp; sourceTree = "<group>"; };
-		3DA4612D179F2E39002EC0AC /* LParticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LParticle.h; sourceTree = "<group>"; };
 		3DA4612E179F2E39002EC0AC /* LSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSystem.cpp; sourceTree = "<group>"; };
 		3DA4612F179F2E39002EC0AC /* LSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSystem.h; sourceTree = "<group>"; };
-		3DA46130179F2E39002EC0AC /* LSystemReconstructor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LSystemReconstructor.cpp; sourceTree = "<group>"; };
-		3DA46131179F2E39002EC0AC /* LSystemReconstructor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSystemReconstructor.h; sourceTree = "<group>"; };
-		3DA46132179F2E39002EC0AC /* LVectorField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LVectorField.cpp; sourceTree = "<group>"; };
-		3DA46133179F2E39002EC0AC /* LVectorField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LVectorField.h; sourceTree = "<group>"; };
 		3DB1BC8517A31E920051CC6B /* CloudsRGBDCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CloudsRGBDCamera.cpp; sourceTree = "<group>"; };
 		3DB1BC8617A31E920051CC6B /* CloudsRGBDCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudsRGBDCamera.h; sourceTree = "<group>"; };
 		3DB1BC8717A31E920051CC6B /* CloudsRGBDVideoPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CloudsRGBDVideoPlayer.cpp; sourceTree = "<group>"; };
@@ -806,18 +797,12 @@
 		3DA45C5F179DB6C3002EC0AC /* vs_src */ = {
 			isa = PBXGroup;
 			children = (
-				3DA46128179F2E39002EC0AC /* CloudsVisualSystemLSystems.cpp */,
 				3DA46129179F2E39002EC0AC /* CloudsVisualSystemLSystems.h */,
+				3DA46128179F2E39002EC0AC /* CloudsVisualSystemLSystems.cpp */,
 				3DA4612A179F2E39002EC0AC /* LNode.cpp */,
 				3DA4612B179F2E39002EC0AC /* LNode.h */,
-				3DA4612C179F2E39002EC0AC /* LParticle.cpp */,
-				3DA4612D179F2E39002EC0AC /* LParticle.h */,
 				3DA4612E179F2E39002EC0AC /* LSystem.cpp */,
 				3DA4612F179F2E39002EC0AC /* LSystem.h */,
-				3DA46130179F2E39002EC0AC /* LSystemReconstructor.cpp */,
-				3DA46131179F2E39002EC0AC /* LSystemReconstructor.h */,
-				3DA46132179F2E39002EC0AC /* LVectorField.cpp */,
-				3DA46133179F2E39002EC0AC /* LVectorField.h */,
 			);
 			path = vs_src;
 			sourceTree = SOURCE_ROOT;
@@ -1249,10 +1234,7 @@
 				3DA460C8179ED608002EC0AC /* CloudsVisualSystem.cpp in Sources */,
 				3DA46134179F2E39002EC0AC /* CloudsVisualSystemLSystems.cpp in Sources */,
 				3DA46135179F2E39002EC0AC /* LNode.cpp in Sources */,
-				3DA46136179F2E39002EC0AC /* LParticle.cpp in Sources */,
 				3DA46137179F2E39002EC0AC /* LSystem.cpp in Sources */,
-				3DA46138179F2E39002EC0AC /* LSystemReconstructor.cpp in Sources */,
-				3DA46139179F2E39002EC0AC /* LVectorField.cpp in Sources */,
 				3DB1BC8917A31E920051CC6B /* CloudsRGBDCamera.cpp in Sources */,
 				3DB1BC8A17A31E920051CC6B /* CloudsRGBDVideoPlayer.cpp in Sources */,
 			);

@@ -12,9 +12,11 @@ class LNode : public ofPoint {
 public:
     
     float   startTime;
+    
     float   pct;
     
-    bool    bActive;
+    vector< vector<ofPoint> > trails;
+    
     
     vector<int> branchesIndex;
 };
