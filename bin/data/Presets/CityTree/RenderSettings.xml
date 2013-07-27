@@ -18,7 +18,7 @@
 <Widget>
     <Kind>4</Kind>
     <Name>Grid_Cross_Size</Name>
-    <Value>0.052750006</Value>
+    <Value>0.053029172</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
@@ -28,17 +28,17 @@
 <Widget>
     <Kind>4</Kind>
     <Name>Grid_Cross_Alpha</Name>
-    <Value>0.225000024</Value>
+    <Value>0.236202508</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
     <Name>Oringinal_alpha</Name>
-    <Value>0.050000012</Value>
+    <Value>0.060026731</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
     <Name>Growing_alpha</Name>
-    <Value>0.211822659</Value>
+    <Value>0.283407301</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
