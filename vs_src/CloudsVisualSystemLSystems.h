@@ -27,9 +27,11 @@ public:
     void selfDrawDebug();
     void selfSceneTransformation();
     void selfDraw();
+    void selfPostDraw();
     void selfExit();
     void selfBegin();
 	void selfEnd();
+    
     
     void selfKeyPressed(ofKeyEventArgs & args);
     void selfKeyReleased(ofKeyEventArgs & args);
@@ -88,6 +90,12 @@ protected:
     float   lsysFlowLenght;
     float   lsysFlowAlpha;
     
+    //  Post
+    //
+    ofShader    postShader;
+    ofTexture   postTexture;
+    float       postChromaDist;
+    float       postGrainDist;
     
     float   time;
 };

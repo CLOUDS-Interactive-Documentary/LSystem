@@ -23,6 +23,9 @@ void CloudsVisualSystemLSystems::selfSetup(){
     
     lsysOriginal.setMode(OF_PRIMITIVE_LINES);
     lsysGrowing.setMode(OF_PRIMITIVE_LINES);
+    
+    postShader.load("",getVisualSystemDataPath()+"shaders/postprocess.fs");
+    ofLoadImage(postTexture, getVisualSystemDataPath()+"images/6.jpg");
 }
 
 void CloudsVisualSystemLSystems::selfSetupGuis(){
@@ -84,6 +87,10 @@ void CloudsVisualSystemLSystems::selfSetupRenderGui(){
     rdrGui->addSlider("Dots_size", 0.0, 10.0, &dotSize);
     rdrGui->addSlider("Flow_lenght", 0.0, 30.0, &lsysFlowLenght);
     rdrGui->addSlider("Flow_alpha", 0.0, 1.0, &lsysFlowAlpha);
+    
+    rdrGui->addLabel("Post-Process");
+    rdrGui->addSlider("Chroma_Distortion", -1.0, 1.0, &postChromaDist);
+    rdrGui->addSlider("Grain_Distortion", 0.0, 1.0, &postGrainDist);
     
     buildGrid();
 }
@@ -183,8 +190,8 @@ void CloudsVisualSystemLSystems::addNode(ofPoint &_pnt){
     LNode node;
     node.set(_pnt);
     node.startTime = -1.0;
-    node.pct = -1.0;
     node.branchesIndex.push_back( lsysLines.size()-1 );
+    node.trailsPct = -1.0;
     node.trails.push_back( blank );
     
     lsysNodes.push_back( node );
@@ -272,7 +279,7 @@ void CloudsVisualSystemLSystems::selfUpdate(){
     if ( lsysFlowSpeed > 0.0 ){
         for(int i = 0; i < lsysNodes.size(); i++){
             
-            if (lsysNodes[i].pct >= 0.0){
+            if (lsysNodes[i].trailsPct >= 0.0){
                 
                 if (lsysNodes[i].startTime < 0.0){
                     break;
@@ -283,7 +290,7 @@ void CloudsVisualSystemLSystems::selfUpdate(){
                     int index = lsysNodes[i].branchesIndex[j];
                     int totalPoints = lsysLines[ index ].size();
                     
-                    float line = (totalPoints-1)*lsysNodes[i].pct;
+                    float line = (totalPoints-1)*lsysNodes[i].trailsPct;
                     int k = line;
                     
                     float pct = line-(int)(line);
@@ -298,10 +305,10 @@ void CloudsVisualSystemLSystems::selfUpdate(){
                     }
                 }
                 
-                lsysNodes[i].pct += lsysFlowSpeed*ofNoise(ofGetElapsedTimef()*0.01)*0.01;
+                lsysNodes[i].trailsPct += lsysFlowSpeed*ofNoise(ofGetElapsedTimef()*0.01)*0.01;
                 
-                if(lsysNodes[i].pct > 1.0){
-                    lsysNodes[i].pct = -1.0;
+                if(lsysNodes[i].trailsPct > 1.0){
+                    lsysNodes[i].trailsPct = -1.0;
                     for (int j = 0; j < lsysNodes[i].trails.size(); j++){
                         lsysNodes[i].trails[j].clear();
                     }
@@ -310,7 +317,7 @@ void CloudsVisualSystemLSystems::selfUpdate(){
                 for (int j = 0; j < lsysNodes[i].trails.size(); j++){
                     lsysNodes[i].trails[j].clear();
                 }
-                lsysNodes[i].pct = ofRandom(-10.0,0.1);
+                lsysNodes[i].trailsPct = ofRandom(-10.0,0.1);
             }
         }
     }
@@ -355,7 +362,7 @@ void CloudsVisualSystemLSystems::selfDraw(){
     ofDisableBlendMode();
     ofEnableAlphaBlending();
     for (int i = 0; i < lsysNodes.size(); i++) {
-        if ( lsysNodes[i].pct > 0.1 && lsysNodes[i].pct < 0.9){
+        if ( lsysNodes[i].trailsPct > 0.1 && lsysNodes[i].trailsPct < 0.9){
             for(int j = 0; j < lsysNodes[i].trails.size(); j++){
                 ofMesh mesh;
                 mesh.setMode(OF_PRIMITIVE_LINE_STRIP);
@@ -380,6 +387,18 @@ void CloudsVisualSystemLSystems::selfDraw(){
     ofPopMatrix();
     
     mat->end();
+}
+
+
+void CloudsVisualSystemLSystems::selfPostDraw(){
+    postShader.begin();
+    postShader.setUniformTexture("tex1", postTexture, 1);
+    postShader.setUniform2f("resolution", ofGetWidth(), ofGetHeight());
+    postShader.setUniform2f("textureResolution", postTexture.getWidth(), postTexture.getHeight());
+    postShader.setUniform1f("chromaDist", postChromaDist);
+    postShader.setUniform1f("grainDist", postGrainDist);
+    CloudsVisualSystem::selfPostDraw();
+    postShader.end();
 }
 
 void CloudsVisualSystemLSystems::guiSystemEvent(ofxUIEventArgs &e){

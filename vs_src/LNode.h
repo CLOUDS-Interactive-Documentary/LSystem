@@ -4,7 +4,8 @@
 //
 //  Created by Patricio Gonzalez Vivo on 7/18/13.
 //
-//
+// yellow slime mode tokio subway
+
 #pragma once
 #include "ofMain.h"
 
@@ -13,10 +14,10 @@ public:
     
     float   startTime;
     
-    float   pct;
-    
+    float   trailsPct;
     vector< vector<ofPoint> > trails;
     
-    
     vector<int> branchesIndex;
+    
+    
 };
