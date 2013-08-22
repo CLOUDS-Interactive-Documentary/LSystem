@@ -25,7 +25,7 @@ void CloudsVisualSystemLSystems::selfSetup(){
     lsysGrowing.setMode(OF_PRIMITIVE_LINES);
     
     postShader.load("",getVisualSystemDataPath()+"shaders/postprocess.fs");
-    ofLoadImage(postTexture, getVisualSystemDataPath()+"images/6.jpg");
+    ofLoadImage(postTexture, getVisualSystemDataPath()+"images/3.jpg");
 }
 
 void CloudsVisualSystemLSystems::selfSetupGuis(){
@@ -89,8 +89,8 @@ void CloudsVisualSystemLSystems::selfSetupRenderGui(){
     rdrGui->addSlider("Flow_alpha", 0.0, 1.0, &lsysFlowAlpha);
     
     rdrGui->addLabel("Post-Process");
-    rdrGui->addSlider("Chroma_Distortion", -1.0, 1.0, &postChromaDist);
-    rdrGui->addSlider("Grain_Distortion", 0.0, 1.0, &postGrainDist);
+    rdrGui->addSlider("Chroma_Distortion", -0.25, 0.25, &postChromaDist);
+    rdrGui->addSlider("Grain_Distortion", 0.0, 0.25, &postGrainDist);
     
     buildGrid();
 }
@@ -395,8 +395,8 @@ void CloudsVisualSystemLSystems::selfPostDraw(){
     postShader.setUniformTexture("tex1", postTexture, 1);
     postShader.setUniform2f("resolution", ofGetWidth(), ofGetHeight());
     postShader.setUniform2f("textureResolution", postTexture.getWidth(), postTexture.getHeight());
-    postShader.setUniform1f("chromaDist", postChromaDist);
-    postShader.setUniform1f("grainDist", postGrainDist);
+    postShader.setUniform1f("chroma", postChromaDist);
+    postShader.setUniform1f("grain", postGrainDist);
     CloudsVisualSystem::selfPostDraw();
     postShader.end();
 }

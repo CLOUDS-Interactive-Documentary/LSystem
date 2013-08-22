@@ -2,9 +2,8 @@ uniform sampler2DRect tex0;
 uniform sampler2DRect tex1;
 uniform vec2 resolution;
 uniform vec2 textureResolution;
-uniform float chromaDist;
-uniform float grainDist;
-
+uniform float chroma;
+uniform float grain;
 
 vec2 barrelDistortion(vec2 coord, float amt) {
 	vec2 cc = coord - 0.5;
@@ -37,33 +36,37 @@ vec3 spectrum_offset( float t ) {
 const int num_iter = 12;
 const float reci_num_iter_f = 1.0 / float(num_iter);
 
-void main(){	
-	float offsetX = 0.0;
- 	float offsetY = 0.0;
- 	float zoom = 1.0;
+vec3 pickColor( vec2 _pos ){
+	vec3 color = texture2DRect( tex0, _pos*resolution.xy ).rgb;
 
-	vec2 st = gl_FragCoord.xy/resolution.xy;// * vec2(1,-1);
-	vec2 uv = (st*zoom);
-	if (grainDist>0.0){
-		float disp = texture2DRect(tex1, st*textureResolution ).r;
-		uv.x += disp*grainDist*0.1;
+	if (grain>0.0){
+		vec3 disp = texture2DRect(tex1, _pos*textureResolution.xy ).rgb;
+		_pos.x += disp.x*grain;
+		_pos.x -= disp.y*grain;
+
+		color *= 0.1;
+		color += texture2DRect( tex0, _pos*resolution.xy ).rgb *0.9;
+
 	}
 
-	vec2 offset = vec2(offsetX,offsetY);
+	return color;
+}
+
+void main(){
+	vec2 st = gl_FragCoord.xy/resolution.xy;
+
 	vec3 sumcol = vec3(0.0);
 	vec3 sumw = vec3(0.0);	
 
-	if ( chromaDist != 0.0 ){
+	if ( chroma != 0.0 ){
 		for ( int i=0; i<num_iter;++i ){
 			float t = float(i) * reci_num_iter_f;
 			vec3 w = spectrum_offset( t );
 			sumw += w;
-			sumcol += w * texture2DRect( tex0, (offset+barrelDistortion(uv, chromaDist*t))*resolution.xy ).rgb;
+			sumcol += w * pickColor( barrelDistortion(st, chroma*t) );
 		}
 		gl_FragColor = vec4(sumcol.rgb / sumw, 1.0);
 	} else {
-		gl_FragColor = texture2DRect( tex0, uv*resolution.xy );
+		gl_FragColor = vec4( pickColor( st ), 1.0); 
 	}
-
-	
 }
