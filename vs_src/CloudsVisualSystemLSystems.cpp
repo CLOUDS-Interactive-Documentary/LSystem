@@ -391,6 +391,7 @@ void CloudsVisualSystemLSystems::selfDraw(){
 
 
 void CloudsVisualSystemLSystems::selfPostDraw(){
+	cout << "post draw with chroma " << postChromaDist << endl;
     postShader.begin();
     postShader.setUniformTexture("tex1", postTexture, 1);
     postShader.setUniform2f("resolution", ofGetWidth(), ofGetHeight());
