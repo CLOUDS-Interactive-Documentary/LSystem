@@ -328,7 +328,7 @@ void CloudsVisualSystemLSystems::selfDrawBackground()
 }
 
 void CloudsVisualSystemLSystems::selfDraw(){
-    mat->begin();
+//    mat->begin();
     glDisable(GL_DEPTH_TEST);
     
     ofPushMatrix();
@@ -386,7 +386,7 @@ void CloudsVisualSystemLSystems::selfDraw(){
     ofPopStyle();
     ofPopMatrix();
     
-    mat->end();
+//    mat->end();
 }
 
 
